@@ -1,12 +1,10 @@
 package edu.java.scrapper.client;
 
 import edu.java.scrapper.configuration.GitHubConfig;
-import edu.java.scrapper.dto.GitHubRepoResponse;
-import org.springframework.stereotype.Component;
+import edu.java.scrapper.dto.github.GitHubRepoResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-@Component
 public class GitHubClient {
     private final WebClient webClient;
 
