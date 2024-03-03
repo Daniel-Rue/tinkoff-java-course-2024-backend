@@ -5,10 +5,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.user.UserService;
 import edu.java.bot.user.UserState;
-import edu.java.bot.utils.LinkStorageService;
-import java.util.Set;
-import java.util.StringJoiner;
 import edu.java.model.dto.response.ListLinksResponse;
+import java.util.StringJoiner;
 import org.springframework.stereotype.Component;
 
 @Component
