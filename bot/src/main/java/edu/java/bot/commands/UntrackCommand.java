@@ -2,15 +2,18 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.exception.ApiErrorResponseException;
 import edu.java.bot.user.UserService;
 import edu.java.bot.user.UserState;
-import edu.java.bot.utils.LinkStorageService;
+import edu.java.model.dto.request.RemoveLinkRequest;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 public class UntrackCommand implements Command {
 
-    private final LinkStorageService linkStorageService;
+    private final ScrapperClient scrapperClient;
     private final UserService userService;
 
     private static final String COMMAND = "/untrack";
@@ -20,9 +23,10 @@ public class UntrackCommand implements Command {
     private static final String LINK_REMOVED_SUCCESS_MESSAGE = "Ссылка успешно удалена.";
     private static final String LINK_NOT_FOUND_MESSAGE = "Указанная ссылка не найдена.";
     private static final String UNKNOWN_COMMAND = "Неизвестная команда.";
+    private static final String ERROR_MESSAGE = "Произошла ошибка при удалении ссылки.";
 
-    public UntrackCommand(LinkStorageService linkStorageService, UserService userService) {
-        this.linkStorageService = linkStorageService;
+    public UntrackCommand(ScrapperClient scrapperClient, UserService userService) {
+        this.scrapperClient = scrapperClient;
         this.userService = userService;
     }
 
@@ -39,25 +43,32 @@ public class UntrackCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long userId = update.message().from().id();
-        UserState state = userService.getUserState(userId);
         Long chatId = update.message().chat().id();
+        UserState state = userService.getUserState(userId);
 
         if (state == UserState.NONE) {
             userService.setUserState(userId, UserState.AWAITING_UNTRACK_LINK);
-            return new SendMessage(chatId, REQUEST_LINK_MESSAGE);
+            return new SendMessage(chatId.toString(), REQUEST_LINK_MESSAGE);
         } else if (state == UserState.AWAITING_UNTRACK_LINK) {
-            String messageText = update.message().text().trim();
             userService.setUserState(userId, UserState.NONE);
+            String messageText = update.message().text().trim();
 
-            if ("all".equalsIgnoreCase(messageText)) {
-                linkStorageService.removeAllLinks(userId);
-                return new SendMessage(chatId, ALL_LINKS_REMOVED_MESSAGE);
-            } else {
-                boolean isRemoved = linkStorageService.removeLink(userId, messageText);
-                return new SendMessage(chatId, isRemoved ? LINK_REMOVED_SUCCESS_MESSAGE : LINK_NOT_FOUND_MESSAGE);
-            }
-        } else {
-            return new SendMessage(chatId, UNKNOWN_COMMAND);
+            return removeLink(userId, messageText, chatId);
+        }
+
+        return new SendMessage(chatId.toString(), UNKNOWN_COMMAND);
+    }
+
+    private SendMessage removeLink(Long userId, String link, Long chatId) {
+        try {
+            RemoveLinkRequest request = new RemoveLinkRequest(link);
+            String finalMessage = scrapperClient.removeLink(userId, request)
+                .then(Mono.just(LINK_REMOVED_SUCCESS_MESSAGE))
+                .onErrorResume(ApiErrorResponseException.class, ex -> Mono.just(ex.getApiErrorResponse().description()))
+                .block();
+            return new SendMessage(chatId.toString(), finalMessage);
+        } catch (Exception e) {
+            return new SendMessage(chatId.toString(), ERROR_MESSAGE);
         }
     }
 
