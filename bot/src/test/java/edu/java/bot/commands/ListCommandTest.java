@@ -5,22 +5,25 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.utils.LinkStorageService;
+import edu.java.bot.client.ScrapperClient;
+import edu.java.model.dto.response.LinkResponse;
+import edu.java.model.dto.response.ListLinksResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import reactor.core.publisher.Mono;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 class ListCommandTest {
 
     @Mock
-    private LinkStorageService linkStorageService;
+    private ScrapperClient scrapperClient;
 
     @Mock
     private Update update;
@@ -45,12 +48,12 @@ class ListCommandTest {
         when(message.chat()).thenReturn(chat);
         when(chat.id()).thenReturn(1L);
 
-        listCommand = new ListCommand(linkStorageService);
+        listCommand = new ListCommand(scrapperClient);
     }
 
     @Test
     void testEmptyListMessage() {
-        when(linkStorageService.getLinks(anyLong())).thenReturn(Collections.emptySet());
+        when(scrapperClient.getAllLinks(anyLong())).thenReturn(Mono.just(new ListLinksResponse(List.of(), 0)));
 
         SendMessage response = listCommand.handle(update);
 
@@ -62,9 +65,8 @@ class ListCommandTest {
 
     @Test
     void testSingleLinkMessage() {
-        Set<String> links = new HashSet<>();
-        links.add("https://example.com");
-        when(linkStorageService.getLinks(anyLong())).thenReturn(links);
+        List<LinkResponse> links = List.of(new LinkResponse(1L, URI.create("https://example.com")));
+        when(scrapperClient.getAllLinks(anyLong())).thenReturn(Mono.just(new ListLinksResponse(links, 1)));
 
         SendMessage response = listCommand.handle(update);
 
@@ -76,10 +78,11 @@ class ListCommandTest {
 
     @Test
     void testMultipleLinksMessage() {
-        Set<String> links = new HashSet<>();
-        links.add("https://example.com");
-        links.add("https://example.org");
-        when(linkStorageService.getLinks(anyLong())).thenReturn(links);
+        List<LinkResponse> links = Arrays.asList(
+            new LinkResponse(1L, URI.create("https://example.com")),
+            new LinkResponse(2L, URI.create("https://example.org"))
+        );
+        when(scrapperClient.getAllLinks(anyLong())).thenReturn(Mono.just(new ListLinksResponse(links,2)));
 
         SendMessage response = listCommand.handle(update);
 
