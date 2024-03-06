@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "client.bot")
 public class BotConfig {
-    private String baseUrl = "http://localhost:8090";
+    private String baseUrl;
 }
 
