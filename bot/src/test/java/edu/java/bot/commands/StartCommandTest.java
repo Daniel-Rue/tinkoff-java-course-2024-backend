@@ -5,12 +5,15 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.user.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,6 +22,9 @@ class StartCommandTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private ScrapperClient scrapperClient;
 
     @Mock
     private Update update;
@@ -43,16 +49,32 @@ class StartCommandTest {
         when(message.chat()).thenReturn(chat);
         when(chat.id()).thenReturn(1L);
 
-        startCommand = new StartCommand(userService);
+        startCommand = new StartCommand(scrapperClient, userService);
+
+        when(scrapperClient.registerChat(anyLong())).thenReturn(Mono.empty());
     }
 
     @Test
-    void testUserRegistration() {
+    void testUserRegistrationSuccess() {
+        when(userService.isRegistered(anyLong())).thenReturn(false);
         SendMessage response = startCommand.handle(update);
 
+        verify(scrapperClient, times(1)).registerChat(123L);
         verify(userService, times(1)).registerUser(123L);
         Assertions.assertEquals(
             "Вы успешно зарегистрированы. Теперь вы можете использовать все команды.",
+            response.getParameters().get("text")
+        );
+    }
+
+    @Test
+    void testUserRegistrationFailure() {
+        when(scrapperClient.registerChat(anyLong())).thenReturn(Mono.error(new RuntimeException("Registration failed")));
+
+        SendMessage response = startCommand.handle(update);
+
+        Assertions.assertEquals(
+            "Произошла ошибка при регистрации.",
             response.getParameters().get("text")
         );
     }

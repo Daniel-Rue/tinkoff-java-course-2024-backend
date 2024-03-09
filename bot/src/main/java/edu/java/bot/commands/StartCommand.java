@@ -2,21 +2,26 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.user.UserService;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 public class StartCommand implements Command {
 
     private final UserService userService;
+    private final ScrapperClient scrapperClient;
 
     private static final String COMMAND = "/start";
     private static final String DESCRIPTION = "Регистрация пользователя";
     private static final String SUCCESS_MESSAGE =
         "Вы успешно зарегистрированы. Теперь вы можете использовать все команды.";
+    private static final String ERROR_MESSAGE = "Произошла ошибка при регистрации.";
 
-    public StartCommand(UserService userService) {
+    public StartCommand(ScrapperClient scrapperClient, UserService userService) {
         this.userService = userService;
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -32,8 +37,18 @@ public class StartCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long userId = update.message().from().id();
-        userService.registerUser(userId);
-        return new SendMessage(update.message().chat().id(), SUCCESS_MESSAGE);
+        Long chatId = update.message().chat().id();
+
+        try {
+            String finalMessage = scrapperClient.registerChat(userId)
+                .then(Mono.just(SUCCESS_MESSAGE))
+                .onErrorResume(e -> Mono.just(ERROR_MESSAGE))
+                .block();
+            userService.registerUser(userId);
+            return new SendMessage(chatId.toString(), finalMessage);
+        } catch (Exception e) {
+            return new SendMessage(chatId.toString(), ERROR_MESSAGE);
+        }
     }
 
     @Override

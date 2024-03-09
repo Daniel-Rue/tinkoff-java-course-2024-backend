@@ -2,25 +2,26 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.user.UserService;
 import edu.java.bot.user.UserState;
-import edu.java.bot.utils.LinkStorageService;
-import java.util.Set;
+import edu.java.model.dto.response.ListLinksResponse;
 import java.util.StringJoiner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
 
-    private final LinkStorageService linkStorageService;
+    private final ScrapperClient scrapperClient;
 
     private static final String COMMAND = "/list";
     private static final String DESCRIPTION = "Вывести все отслеживаемые ссылки.";
     private static final String EMPTY_LINKS_MESSAGE = "На данный момент вы не отслеживаете никакие ссылки.";
     private static final String TRACKED_LINKS_MESSAGE_TITLE = "Ваши отслеживаемые ссылки:";
+    private static final String ERROR_MESSAGE = "Произошла ошибка при получении списка ссылок.";
 
-    public ListCommand(LinkStorageService linkStorageService) {
-        this.linkStorageService = linkStorageService;
+    public ListCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -36,14 +37,21 @@ public class ListCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long userId = update.message().from().id();
-        Set<String> links = linkStorageService.getLinks(userId);
+        Long chatId = update.message().chat().id();
 
-        if (links.isEmpty()) {
-            return new SendMessage(update.message().chat().id(), EMPTY_LINKS_MESSAGE);
-        } else {
-            StringJoiner message = new StringJoiner("\n", TRACKED_LINKS_MESSAGE_TITLE + "\n", "");
-            links.forEach(message::add);
-            return new SendMessage(update.message().chat().id(), message.toString());
+        try {
+            ListLinksResponse response = scrapperClient.getAllLinks(userId)
+                .block();
+
+            if (response.links().isEmpty()) {
+                return new SendMessage(chatId.toString(), EMPTY_LINKS_MESSAGE);
+            } else {
+                StringJoiner message = new StringJoiner("\n", TRACKED_LINKS_MESSAGE_TITLE + "\n", "");
+                response.links().forEach(link -> message.add(link.url().toString()));
+                return new SendMessage(chatId.toString(), message.toString());
+            }
+        } catch (Exception e) {
+            return new SendMessage(chatId.toString(), ERROR_MESSAGE);
         }
     }
 
