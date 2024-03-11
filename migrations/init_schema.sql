@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset Daniel-Rue:01-create-link
-CREATE TABLE link
+CREATE TABLE IF NOT EXISTS link
 (
     id              BIGINT GENERATED ALWAYS AS IDENTITY,
     url             TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE link
 );
 
 --changeset Daniel-Rue:02-create-chat.sql
-CREATE TABLE chat
+CREATE TABLE IF NOT EXISTS chat
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY,
     created_at  TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE chat
 );
 
 --changeset Daniel-Rue:03-create-chat_link.sql
-CREATE TABLE chat_link
+CREATE TABLE IF NOT EXISTS chat_link
 (
     chat_id        BIGINT NOT NULL,
     link_id        BIGINT NOT NULL,
