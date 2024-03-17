@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Repository
 public class JdbcLinkRepository {
 
@@ -47,6 +46,11 @@ public class JdbcLinkRepository {
             JOIN link l ON cl.link_id = l.id
             WHERE l.url = ? AND cl.chat_id = ?
             """;
+
+    private static final String FIND_LINKS_TO_CHECK = "SELECT * FROM link WHERE last_check_time < ?";
+    private static final String FIND_SUBSCRIBED_CHATS = "SELECT chat_id FROM chat_link WHERE link_id = ?";
+    private static final String UPDATE_LAST_CHECK_TIME = "UPDATE link SET last_check_time = ? WHERE id = ?";
+    private static final String FIND_BY_URL = "SELECT * FROM link WHERE url = ?";
 
     public JdbcLinkRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -111,19 +115,19 @@ public class JdbcLinkRepository {
 
     @Transactional
     public List<Link> findLinksToCheck(OffsetDateTime thresholdTime) {
-        String sql = "SELECT * FROM link WHERE last_check_time < ?";
+        String sql = FIND_LINKS_TO_CHECK;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Link.class), thresholdTime);
     }
 
     @Transactional
     public List<Long> findSubscribedChats(long linkId) {
-        String sql = "SELECT chat_id FROM chat_link WHERE link_id = ?";
+        String sql = FIND_SUBSCRIBED_CHATS;
         return jdbcTemplate.queryForList(sql, Long.class, linkId);
     }
 
     @Transactional
     public void updateLastCheckTime(long linkId, OffsetDateTime lastCheckTime) {
-        String sql = "UPDATE link SET last_check_time = ? WHERE id = ?";
+        String sql = UPDATE_LAST_CHECK_TIME;
         jdbcTemplate.update(sql, lastCheckTime, linkId);
     }
 
@@ -153,7 +157,7 @@ public class JdbcLinkRepository {
 
     public Optional<Link> findByUrl(String url) {
         List<Link> links = jdbcTemplate.query(
-            "SELECT * FROM link WHERE url = ?",
+            FIND_BY_URL,
             new Object[] {url},
             new BeanPropertyRowMapper<>(Link.class)
         );
