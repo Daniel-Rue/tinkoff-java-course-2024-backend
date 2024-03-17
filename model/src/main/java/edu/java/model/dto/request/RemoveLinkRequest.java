@@ -1,4 +1,6 @@
 package edu.java.model.dto.request;
 
-public record RemoveLinkRequest(String link) {
+import java.net.URI;
+
+public record RemoveLinkRequest(URI link) {
 }

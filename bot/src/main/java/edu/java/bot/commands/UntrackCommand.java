@@ -7,6 +7,7 @@ import edu.java.bot.exception.ApiErrorResponseException;
 import edu.java.bot.user.UserService;
 import edu.java.bot.user.UserState;
 import edu.java.model.dto.request.RemoveLinkRequest;
+import java.net.URI;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -59,8 +60,9 @@ public class UntrackCommand implements Command {
         return new SendMessage(chatId.toString(), UNKNOWN_COMMAND);
     }
 
-    private SendMessage removeLink(Long userId, String link, Long chatId) {
+    private SendMessage removeLink(Long userId, String linkText, Long chatId) {
         try {
+            URI link = URI.create(linkText.trim());
             RemoveLinkRequest request = new RemoveLinkRequest(link);
             String finalMessage = scrapperClient.removeLink(userId, request)
                 .then(Mono.just(LINK_REMOVED_SUCCESS_MESSAGE))
