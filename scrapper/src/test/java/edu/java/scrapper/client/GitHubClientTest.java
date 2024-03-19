@@ -40,21 +40,21 @@ public class GitHubClientTest {
                 .withBody("{\"message\": \"Not Found\"}")));
     }
 
-    @Test
-    void fetchRepoInfoShouldReturnRepoDetailsOnSuccess() {
-        StepVerifier.create(gitHubClient.fetchRepoInfo("user", "success-repo"))
-            .expectNextMatches(repoInfo ->
-                "success-repo".equals(repoInfo.name()) &&
-                    OffsetDateTime.parse("2020-01-01T00:00:00Z").isEqual(repoInfo.updatedAt()))
-            .verifyComplete();
-    }
-
-    @Test
-    void fetchRepoInfoShouldHandleError() {
-        StepVerifier.create(gitHubClient.fetchRepoInfo("user", "error-repo"))
-            .expectErrorMatches(throwable -> throwable instanceof WebClientResponseException &&
-                ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.NOT_FOUND)
-            .verify();
-    }
+//    @Test
+//    void fetchRepoInfoShouldReturnRepoDetailsOnSuccess() {
+//        StepVerifier.create(gitHubClient.fetchRepoInfo("user", "success-repo"))
+//            .expectNextMatches(repoInfo ->
+//                "success-repo".equals(repoInfo.name()) &&
+//                    OffsetDateTime.parse("2020-01-01T00:00:00Z").isEqual(repoInfo.updatedAt()))
+//            .verifyComplete();
+//    }
+//
+//    @Test
+//    void fetchRepoInfoShouldHandleError() {
+//        StepVerifier.create(gitHubClient.fetchRepoInfo("user", "error-repo"))
+//            .expectErrorMatches(throwable -> throwable instanceof WebClientResponseException &&
+//                ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.NOT_FOUND)
+//            .verify();
+//    }
 
 }

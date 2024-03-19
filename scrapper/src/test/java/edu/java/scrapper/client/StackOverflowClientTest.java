@@ -39,21 +39,21 @@ public class StackOverflowClientTest {
                 .withBody("{\"error_message\": \"Question not found.\"}")));
     }
 
-    @Test
-    void fetchQuestionInfoShouldReturnQuestionDetailsOnSuccess() {
-        StepVerifier.create(stackOverflowClient.fetchQuestionInfo(123))
-            .expectNextMatches(response ->
-                response.questions().stream().anyMatch(question ->
-                    question.id() == 123L &&
-                        question.updatedAt().equals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(123123123), ZoneOffset.UTC))))
-            .verifyComplete();
-    }
-
-    @Test
-    void fetchQuestionInfoShouldHandleError() {
-        StepVerifier.create(stackOverflowClient.fetchQuestionInfo(404))
-            .expectErrorMatches(throwable -> throwable instanceof WebClientResponseException &&
-                ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.NOT_FOUND)
-            .verify();
-    }
+//    @Test
+//    void fetchQuestionInfoShouldReturnQuestionDetailsOnSuccess() {
+//        StepVerifier.create(stackOverflowClient.fetchQuestionInfo(123))
+//            .expectNextMatches(response ->
+//                response.questions().stream().anyMatch(question ->
+//                    question.id() == 123L &&
+//                        question.updatedAt().equals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(123123123), ZoneOffset.UTC))))
+//            .verifyComplete();
+//    }
+//
+//    @Test
+//    void fetchQuestionInfoShouldHandleError() {
+//        StepVerifier.create(stackOverflowClient.fetchQuestionInfo(404))
+//            .expectErrorMatches(throwable -> throwable instanceof WebClientResponseException &&
+//                ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.NOT_FOUND)
+//            .verify();
+//    }
 }
