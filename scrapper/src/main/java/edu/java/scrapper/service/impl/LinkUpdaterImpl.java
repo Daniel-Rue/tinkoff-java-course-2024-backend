@@ -15,7 +15,6 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -70,9 +69,9 @@ public class LinkUpdaterImpl implements LinkUpdater {
         }
     }
 
-
     private int checkForNewGitHubCommits(Link link, String owner, String repo) {
-        List<GitHubCommitResponse> commits = gitHubClient.fetchCommitsSince(owner, repo, link.getLastCheckTime()).block();
+        List<GitHubCommitResponse> commits =
+            gitHubClient.fetchCommitsSince(owner, repo, link.getLastCheckTime()).block();
         long newCommitsCount = commits.stream()
             .filter(commit -> commit.commit().committer().date().isAfter(link.getLastCheckTime()))
             .count();
@@ -84,7 +83,10 @@ public class LinkUpdaterImpl implements LinkUpdater {
                 .collect(Collectors.joining(", "));
 
             LOGGER.info("New GitHub commits detected: {}. Details: {}", newCommitsCount, commitDetails);
-            sendUpdateNotification(link, String.format("New GitHub commits detected: %d. Details: %s", newCommitsCount, commitDetails));
+            sendUpdateNotification(
+                link,
+                String.format("New GitHub commits detected: %d. Details: %s", newCommitsCount, commitDetails)
+            );
             linkService.updateLastCheckTime(link.getId(), OffsetDateTime.now());
             return 1;
         }

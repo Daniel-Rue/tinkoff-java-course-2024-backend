@@ -6,7 +6,6 @@ import edu.java.scrapper.dto.github.GitHubLastUpdateResponse;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class GitHubClient {
