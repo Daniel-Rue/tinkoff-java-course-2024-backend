@@ -70,25 +70,35 @@ public class LinkUpdaterImpl implements LinkUpdater {
     }
 
     private int checkForNewGitHubCommits(Link link, String owner, String repo) {
-        List<GitHubCommitResponse> commits =
-            gitHubClient.fetchCommitsSince(owner, repo, link.getLastCheckTime()).block();
-        long newCommitsCount = commits.stream()
-            .filter(commit -> commit.commit().committer().date().isAfter(link.getLastCheckTime()))
-            .count();
+        try {
+            List<GitHubCommitResponse> commits = gitHubClient.fetchCommitsSince(owner, repo, link.getLastCheckTime())
+                .block();
 
-        if (newCommitsCount > 0) {
-            String commitDetails = commits.stream()
+            long newCommitsCount = commits.stream()
                 .filter(commit -> commit.commit().committer().date().isAfter(link.getLastCheckTime()))
-                .map(commit -> commit.commit().committer().date() + " (SHA: " + commit.sha() + ")")
-                .collect(Collectors.joining(", "));
+                .count();
 
-            LOGGER.info("New GitHub commits detected: {}. Details: {}", newCommitsCount, commitDetails);
-            sendUpdateNotification(
-                link,
-                String.format("New GitHub commits detected: %d. Details: %s", newCommitsCount, commitDetails)
-            );
-            linkService.updateLastCheckTime(link.getId(), OffsetDateTime.now());
-            return 1;
+            if (newCommitsCount > 0) {
+                String commitDetails = commits.stream()
+                    .filter(commit -> commit.commit().committer().date().isAfter(link.getLastCheckTime()))
+                    .map(commit -> String.format(
+                        "'%s' by %s on %s",
+                        commit.commit().message(),
+                        commit.commit().committer().name(),
+                        commit.commit().committer().date()
+                    ))
+                    .collect(Collectors.joining(", "));
+
+                LOGGER.info("New GitHub commits detected: {}. Details: {}", newCommitsCount, commitDetails);
+                sendUpdateNotification(
+                    link,
+                    String.format("New GitHub commits detected: %d. Details: %s", newCommitsCount, commitDetails)
+                );
+                linkService.updateLastCheckTime(link.getId(), OffsetDateTime.now());
+                return 1;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error while checking for new GitHub commits", e);
         }
         return 0;
     }
@@ -138,7 +148,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
                 );
 
                 try {
-                    botClient.sendUpdate(updateRequest).block(); // Используем block для синхронного ожидания
+                    botClient.sendUpdate(updateRequest).block();
                     LOGGER.info("Update notification sent for link: {} to chatId: {}", link.getUrl(), chatId);
                 } catch (Exception error) {
                     LOGGER.error(

@@ -8,9 +8,11 @@ public record GitHubCommitResponse(
     @JsonProperty("commit") Commit commit
 ) {
     public record Commit(
+        @JsonProperty("message") String message,
         @JsonProperty("committer") Committer committer
     ) {
         public record Committer(
+            @JsonProperty("name") String name,
             @JsonProperty("date") OffsetDateTime date
         ) {
         }

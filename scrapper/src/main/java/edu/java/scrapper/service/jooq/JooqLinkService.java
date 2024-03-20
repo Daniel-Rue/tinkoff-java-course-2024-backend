@@ -1,51 +1,50 @@
-package edu.java.scrapper.service.jdbc;
+package edu.java.scrapper.service.jooq;
 
 import edu.java.scrapper.domain.entity.Link;
-import edu.java.scrapper.domain.jbdc.JdbcLinkRepository;
-import edu.java.scrapper.domain.jbdc.JdbcTgChatRepository;
+import edu.java.scrapper.domain.jooq.JooqLinkRepository;
+import edu.java.scrapper.domain.jooq.JooqTgChatRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.service.LinkService;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.Collection;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-@Primary
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class JdbcLinkService implements LinkService {
+public class JooqLinkService implements LinkService {
 
-    private final JdbcLinkRepository linkRepository;
-    private final JdbcTgChatRepository tgChatRepository;
+    private final JooqLinkRepository linkRepository;
+    private final JooqTgChatRepository tgChatRepository;
 
     @Override
     @Transactional
     public Link add(long tgChatId, URI url) {
         validateChatExists(tgChatId);
-        checkLinkDuplication(url, tgChatId);
 
-        return linkRepository.add(
-            new Link(null, url.toString(), OffsetDateTime.now(), OffsetDateTime.now(), "System"),
-            tgChatId
-        );
+        if (linkRepository.findByUrlAndChatId(url.toString(), tgChatId).isPresent()) {
+            throw new LinkAlreadyExistsException(url);
+        }
+
+        Link newLink = new Link(null, url.toString(), null, OffsetDateTime.now(), "System");
+        return linkRepository.add(newLink);
     }
 
     @Override
     @Transactional
     public Link remove(long tgChatId, URI url) {
         validateChatExists(tgChatId);
-
-        Link linkToRemove = linkRepository.findByUrlAndChatId(url, tgChatId)
+        Link linkToRemove = linkRepository.findByUrlAndChatId(url.toString(), tgChatId)
             .orElseThrow(() -> new LinkNotFoundException(url));
 
-        linkRepository.remove(linkToRemove.getId(), tgChatId);
+        linkRepository.remove(linkToRemove.getId());
+
         return linkToRemove;
     }
 
@@ -53,6 +52,11 @@ public class JdbcLinkService implements LinkService {
     public Collection<Link> listAll(long tgChatId) {
         validateChatExists(tgChatId);
         return linkRepository.findAllByChatId(tgChatId);
+    }
+
+    @Override
+    public void updateLastCheckTime(long linkId, OffsetDateTime lastCheckTime) {
+        linkRepository.updateLastCheckTime(linkId, lastCheckTime);
     }
 
     @Override
@@ -65,21 +69,9 @@ public class JdbcLinkService implements LinkService {
         return linkRepository.findSubscribedChats(linkId);
     }
 
-    @Override
-    @Transactional
-    public void updateLastCheckTime(long linkId, OffsetDateTime lastCheckTime) {
-        linkRepository.updateLastCheckTime(linkId, lastCheckTime);
-    }
-
     private void validateChatExists(long tgChatId) {
         if (!tgChatRepository.existsById(tgChatId)) {
             throw new ChatNotFoundException(tgChatId);
-        }
-    }
-
-    private void checkLinkDuplication(URI url, long tgChatId) {
-        if (linkRepository.existsByUrlAndChatId(url, tgChatId)) {
-            throw new LinkAlreadyExistsException(url);
         }
     }
 }
