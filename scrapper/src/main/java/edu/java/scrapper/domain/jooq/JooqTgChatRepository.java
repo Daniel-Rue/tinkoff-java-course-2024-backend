@@ -20,7 +20,6 @@ public class JooqTgChatRepository {
     @Transactional
     public ChatRecord add(long tgChatId, OffsetDateTime createdAt) {
         return dsl.insertInto(CHAT)
-            .set(CHAT.ID, tgChatId)
             .set(CHAT.CREATED_AT, createdAt)
             .returning()
             .fetchOne();

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcLinkTest extends IntegrationEnvironment {
+public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
     private JdbcLinkRepository linkRepository;

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcTgChatTest extends IntegrationEnvironment {
+public class JdbcTgChatRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
     private JdbcTgChatRepository chatRepository;
