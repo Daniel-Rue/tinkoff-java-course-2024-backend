@@ -1,3 +1,5 @@
+package edu.java.jooqgen;
+
 import org.jooq.codegen.GenerationTool;
 import org.jooq.meta.jaxb.Configuration;
 import org.jooq.meta.jaxb.Database;

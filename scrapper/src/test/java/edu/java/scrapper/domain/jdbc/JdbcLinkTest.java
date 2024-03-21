@@ -1,4 +1,4 @@
-package edu.java.scrapper.jdbc;
+package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.entity.Link;
