@@ -28,13 +28,8 @@ public class JooqLinkService implements LinkService {
     @Transactional
     public Link add(long tgChatId, URI url) {
         validateChatExists(tgChatId);
-
-        if (linkRepository.findByUrlAndChatId(url.toString(), tgChatId).isPresent()) {
-            throw new LinkAlreadyExistsException(url);
-        }
-
-        Link newLink = new Link(null, url.toString(), null, OffsetDateTime.now(), "System");
-        return linkRepository.add(newLink);
+        Link newLink = new Link(null, url.toString(), OffsetDateTime.now(), OffsetDateTime.now(), "System");
+        return linkRepository.add(newLink, tgChatId);
     }
 
     @Override
@@ -43,9 +38,7 @@ public class JooqLinkService implements LinkService {
         validateChatExists(tgChatId);
         Link linkToRemove = linkRepository.findByUrlAndChatId(url.toString(), tgChatId)
             .orElseThrow(() -> new LinkNotFoundException(url));
-
-        linkRepository.remove(linkToRemove.getId());
-
+        linkRepository.remove(linkToRemove.getId(), tgChatId);
         return linkToRemove;
     }
 

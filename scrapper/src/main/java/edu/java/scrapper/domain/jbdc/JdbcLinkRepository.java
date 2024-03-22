@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Repository
 public class JdbcLinkRepository {
 
@@ -151,7 +150,7 @@ public class JdbcLinkRepository {
         return count != null && count > 0;
     }
 
-    public Optional<Link> findByUrl(String url) {
+    private Optional<Link> findByUrl(String url) {
         List<Link> links = jdbcTemplate.query(
             "SELECT * FROM link WHERE url = ?",
             new Object[] {url},
