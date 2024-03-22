@@ -4,7 +4,6 @@ import edu.java.scrapper.domain.entity.Link;
 import edu.java.scrapper.domain.jooq.JooqLinkRepository;
 import edu.java.scrapper.domain.jooq.JooqTgChatRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
-import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.service.LinkService;
 import java.net.URI;

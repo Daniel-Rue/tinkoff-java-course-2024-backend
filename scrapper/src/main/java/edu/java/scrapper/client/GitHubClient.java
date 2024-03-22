@@ -1,12 +1,10 @@
 package edu.java.scrapper.client;
 
-import edu.java.model.dto.response.ApiErrorResponse;
 import edu.java.scrapper.configuration.GitHubConfig;
 import edu.java.scrapper.dto.github.GitHubCommitResponse;
 import edu.java.scrapper.dto.github.GitHubLastUpdateResponse;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.scrapper.exception.ApiErrorResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,7 +23,12 @@ public class GitHubClient {
             .uri("/repos/{owner}/{repo}", owner, repo)
             .retrieve()
             .bodyToMono(GitHubLastUpdateResponse.class)
-            .doOnError(error -> LOGGER.error("Error fetching the last update for repo: {}/{} - {}", owner, repo, error.getMessage()))
+            .doOnError(error -> LOGGER.error(
+                "Error fetching the last update for repo: {}/{} - {}",
+                owner,
+                repo,
+                error.getMessage()
+            ))
             .onErrorResume(error -> Mono.empty());
     }
 
