@@ -12,7 +12,6 @@ import java.time.OffsetDateTime;
 import javax.annotation.processing.Generated;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record2;
@@ -38,14 +37,15 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
     /**
      * Setter for <code>CHAT.ID</code>.
      */
-    public void setId(@Nullable Long value) {
+    public void setId(@NotNull Long value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>CHAT.ID</code>.
      */
-    @Nullable
+    @jakarta.validation.constraints.NotNull
+    @NotNull
     public Long getId() {
         return (Long) get(0);
     }
@@ -105,7 +105,7 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
     }
 
     @Override
-    @Nullable
+    @NotNull
     public Long component1() {
         return getId();
     }
@@ -117,7 +117,7 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
     }
 
     @Override
-    @Nullable
+    @NotNull
     public Long value1() {
         return getId();
     }
@@ -130,7 +130,7 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
 
     @Override
     @NotNull
-    public ChatRecord value1(@Nullable Long value) {
+    public ChatRecord value1(@NotNull Long value) {
         setId(value);
         return this;
     }
@@ -144,7 +144,7 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
 
     @Override
     @NotNull
-    public ChatRecord values(@Nullable Long value1, @NotNull OffsetDateTime value2) {
+    public ChatRecord values(@NotNull Long value1, @NotNull OffsetDateTime value2) {
         value1(value1);
         value2(value2);
         return this;
@@ -165,7 +165,7 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
      * Create a detached, initialised ChatRecord
      */
     @ConstructorProperties({ "id", "createdAt" })
-    public ChatRecord(@Nullable Long id, @NotNull OffsetDateTime createdAt) {
+    public ChatRecord(@NotNull Long id, @NotNull OffsetDateTime createdAt) {
         super(Chat.CHAT);
 
         setId(id);

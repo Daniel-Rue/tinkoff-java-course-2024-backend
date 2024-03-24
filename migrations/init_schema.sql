@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS link
 --changeset Daniel-Rue:02-create-chat.sql
 CREATE TABLE IF NOT EXISTS chat
 (
-    id          BIGINT GENERATED ALWAYS AS IDENTITY,
+    id          BIGINT NOT NULL,
     created_at  TIMESTAMP WITH TIME ZONE NOT NULL,
 
     PRIMARY KEY (id)
