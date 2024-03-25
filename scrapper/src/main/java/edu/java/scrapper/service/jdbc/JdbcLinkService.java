@@ -2,7 +2,7 @@ package edu.java.scrapper.service.jdbc;
 
 import edu.java.scrapper.domain.entity.Link;
 import edu.java.scrapper.domain.jbdc.JdbcLinkRepository;
-import edu.java.scrapper.domain.jbdc.JdbcChatRepository;
+import edu.java.scrapper.domain.jbdc.JdbcTgChatRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
@@ -12,17 +12,15 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Primary
 @Service
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
 
     private final JdbcLinkRepository linkRepository;
-    private final JdbcChatRepository tgChatRepository;
+    private final JdbcTgChatRepository tgChatRepository;
 
     @Override
     @Transactional

@@ -1,31 +1,32 @@
 package edu.java.scrapper.service.jpa;
 
-import edu.java.scrapper.domain.entity.Chat;
+import edu.java.scrapper.domain.entity.TgChat;
 import edu.java.scrapper.domain.entity.Link;
-import edu.java.scrapper.domain.jpa.JpaChatRepository;
+import edu.java.scrapper.domain.jpa.JpaTgChatRepository;
 import edu.java.scrapper.domain.jpa.JpaLinkRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.service.LinkService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
+
 
 @Primary
 @Service
 public class JpaLinkService implements LinkService {
 
     private final JpaLinkRepository linkRepository;
-    private final JpaChatRepository chatRepository;
+    private final JpaTgChatRepository chatRepository;
 
     @Autowired
-    public JpaLinkService(JpaLinkRepository linkRepository, JpaChatRepository chatRepository) {
+    public JpaLinkService(JpaLinkRepository linkRepository, JpaTgChatRepository chatRepository) {
         this.linkRepository = linkRepository;
         this.chatRepository = chatRepository;
     }
@@ -43,11 +44,11 @@ public class JpaLinkService implements LinkService {
         newLink.setCreatedBy("System");
         Link savedLink = linkRepository.save(newLink);
 
-        Chat chat = chatRepository.findById(tgChatId)
+        TgChat tgChat = chatRepository.findById(tgChatId)
             .orElseThrow(() -> new ChatNotFoundException(tgChatId));
-        savedLink.getChats().add(chat);
-        chat.getLinks().add(savedLink);
-        chatRepository.save(chat); // Ensure the relationship is persisted.
+        savedLink.getTgChats().add(tgChat);
+        tgChat.getLinks().add(savedLink);
+        chatRepository.save(tgChat);
 
         return savedLink;
     }

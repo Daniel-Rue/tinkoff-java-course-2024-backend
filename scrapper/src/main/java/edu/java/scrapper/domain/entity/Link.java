@@ -39,7 +39,7 @@ public class Link {
     private String createdBy;
 
     @ManyToMany(mappedBy = "links")
-    private Set<Chat> chats = new HashSet<>();
+    private Set<TgChat> tgChats = new HashSet<>();
 
     public Link(Long id, String url, OffsetDateTime lastCheckTime, OffsetDateTime createdAt, String createdBy) {
         this.id = id;

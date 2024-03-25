@@ -2,7 +2,7 @@ package edu.java.scrapper.service.jooq;
 
 import edu.java.scrapper.domain.entity.Link;
 import edu.java.scrapper.domain.jooq.JooqLinkRepository;
-import edu.java.scrapper.domain.jooq.JooqChatRepository;
+import edu.java.scrapper.domain.jooq.JooqTgChatRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.service.LinkService;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JooqLinkService implements LinkService {
 
     private final JooqLinkRepository linkRepository;
-    private final JooqChatRepository tgChatRepository;
+    private final JooqTgChatRepository tgChatRepository;
 
     @Override
     @Transactional

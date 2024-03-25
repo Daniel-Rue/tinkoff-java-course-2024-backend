@@ -21,7 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "chat")
-public class Chat {
+public class TgChat {
     @Id
     private Long id;
 
@@ -36,7 +36,7 @@ public class Chat {
     )
     private Set<Link> links = new HashSet<>();
 
-    public Chat(Long id, OffsetDateTime createdAt) {
+    public TgChat(Long id, OffsetDateTime createdAt) {
         this.id = id;
         this.createdAt = createdAt;
     }

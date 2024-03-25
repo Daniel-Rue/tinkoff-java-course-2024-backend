@@ -1,22 +1,20 @@
 package edu.java.scrapper.service.jdbc;
 
-import edu.java.scrapper.domain.entity.Chat;
-import edu.java.scrapper.domain.jbdc.JdbcChatRepository;
+import edu.java.scrapper.domain.entity.TgChat;
+import edu.java.scrapper.domain.jbdc.JdbcTgChatRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.DuplicateRegistrationException;
 import edu.java.scrapper.service.TgChatService;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Primary
 @Service
 @RequiredArgsConstructor
 public class JdbcChatService implements TgChatService {
 
-    private final JdbcChatRepository tgChatRepository;
+    private final JdbcTgChatRepository tgChatRepository;
 
     @Override
     @Transactional
@@ -25,16 +23,16 @@ public class JdbcChatService implements TgChatService {
             throw new DuplicateRegistrationException("Chat with ID " + tgChatId + " is already registered.");
         }
 
-        Chat newChat = new Chat(tgChatId, OffsetDateTime.now());
-        tgChatRepository.add(newChat);
+        TgChat newTgChat = new TgChat(tgChatId, OffsetDateTime.now());
+        tgChatRepository.add(newTgChat);
     }
 
     @Override
     @Transactional
     public void unregister(long tgChatId) {
-        Chat chat = tgChatRepository.findById(tgChatId)
+        TgChat tgChat = tgChatRepository.findById(tgChatId)
             .orElseThrow(() -> new ChatNotFoundException(tgChatId));
 
-        tgChatRepository.remove(chat);
+        tgChatRepository.remove(tgChat);
     }
 }

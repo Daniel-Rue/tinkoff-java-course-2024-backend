@@ -1,8 +1,8 @@
 package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
-import edu.java.scrapper.domain.entity.Chat;
-import edu.java.scrapper.domain.jbdc.JdbcChatRepository;
+import edu.java.scrapper.domain.entity.TgChat;
+import edu.java.scrapper.domain.jbdc.JdbcTgChatRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,10 +16,10 @@ import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcChatRepositoryTest extends IntegrationEnvironment {
+public class JdbcTgTgChatRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
-    private JdbcChatRepository chatRepository;
+    private JdbcTgChatRepository chatRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -27,14 +27,14 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addTest() {
-        Chat chat = new Chat(null, OffsetDateTime.now());
-        Chat savedChat = chatRepository.add(chat);
+        TgChat tgChat = new TgChat(null, OffsetDateTime.now());
+        TgChat savedTgChat = chatRepository.add(tgChat);
 
-        assertNotNull(savedChat.getId());
+        assertNotNull(savedTgChat.getId());
 
         int count = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM chat WHERE id = ?",
-            new Object[] {savedChat.getId()},
+            new Object[] {savedTgChat.getId()},
             Integer.class
         );
         assertEquals(1, count);
@@ -44,14 +44,14 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void removeTest() {
-        Chat chat = new Chat(null, OffsetDateTime.now());
-        Chat savedChat = chatRepository.add(chat);
+        TgChat tgChat = new TgChat(null, OffsetDateTime.now());
+        TgChat savedTgChat = chatRepository.add(tgChat);
 
-        chatRepository.remove(savedChat);
+        chatRepository.remove(savedTgChat);
 
         int count = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM chat WHERE id = ?",
-            new Object[] {savedChat.getId()},
+            new Object[] {savedTgChat.getId()},
             Integer.class
         );
         assertEquals(0, count);
