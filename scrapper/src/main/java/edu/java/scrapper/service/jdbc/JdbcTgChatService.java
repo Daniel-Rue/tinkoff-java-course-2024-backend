@@ -7,12 +7,10 @@ import edu.java.scrapper.exception.DuplicateRegistrationException;
 import edu.java.scrapper.service.TgChatService;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
-public class JdbcChatService implements TgChatService {
+public class JdbcTgChatService implements TgChatService {
 
     private final JdbcTgChatRepository tgChatRepository;
 

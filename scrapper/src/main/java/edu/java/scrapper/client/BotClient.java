@@ -2,7 +2,7 @@ package edu.java.scrapper.client;
 
 import edu.java.model.dto.request.LinkUpdateRequest;
 import edu.java.model.dto.response.ApiErrorResponse;
-import edu.java.scrapper.configuration.BotConfig;
+import edu.java.scrapper.configuration.client.BotConfig;
 import edu.java.scrapper.exception.ApiErrorResponseException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

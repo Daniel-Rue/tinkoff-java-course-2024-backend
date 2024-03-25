@@ -8,18 +8,12 @@ import edu.java.scrapper.service.TgChatService;
 import jakarta.transaction.Transactional;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 
-@Primary
-@Service
-public class JpaChatService implements TgChatService {
+public class JpaTgChatService implements TgChatService {
 
     private final JpaTgChatRepository tgChatRepository;
 
-    @Autowired
-    public JpaChatService(JpaTgChatRepository tgChatRepository) {
+    public JpaTgChatService(JpaTgChatRepository tgChatRepository) {
         this.tgChatRepository = tgChatRepository;
     }
 

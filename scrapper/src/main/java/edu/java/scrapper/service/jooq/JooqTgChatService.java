@@ -6,12 +6,10 @@ import edu.java.scrapper.exception.DuplicateRegistrationException;
 import edu.java.scrapper.service.TgChatService;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
-public class JooqChatService implements TgChatService {
+public class JooqTgChatService implements TgChatService {
 
     private final JooqTgChatRepository tgChatRepository;
 

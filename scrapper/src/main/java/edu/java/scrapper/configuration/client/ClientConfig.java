@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration;
+package edu.java.scrapper.configuration.client;
 
 import edu.java.scrapper.client.BotClient;
 import edu.java.scrapper.client.GitHubClient;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class ClientConfiguration {
+public class ClientConfig {
 
     private final GitHubConfig gitHubConfig;
     private final StackOverflowConfig stackOverFlowConfig;
