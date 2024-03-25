@@ -3,12 +3,14 @@ package edu.java.scrapper.controller;
 import edu.java.model.dto.request.AddLinkRequest;
 import edu.java.model.dto.request.RemoveLinkRequest;
 import edu.java.model.dto.response.LinkResponse;
+import edu.java.model.dto.response.ListLinksResponse;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.DuplicateRegistrationException;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.service.LinkService;
 import java.net.URI;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +30,15 @@ public class LinkController {
     private final LinkService linkService;
 
     @GetMapping
-    public ResponseEntity<?> getAllLinks(@RequestHeader(TG_CHAT_ID_HEADER) Long tgChatId) {
+    public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader(TG_CHAT_ID_HEADER) Long tgChatId) {
         var links = linkService.listAll(tgChatId);
-        return ResponseEntity.ok(links);
+        ListLinksResponse response = new ListLinksResponse(
+            links.stream()
+                .map(link -> new LinkResponse(link.getId(), URI.create(link.getUrl())))
+                .collect(Collectors.toList()),
+            links.size()
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

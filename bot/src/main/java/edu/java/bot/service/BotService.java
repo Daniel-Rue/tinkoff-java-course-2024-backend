@@ -35,7 +35,7 @@ public class BotService {
     }
 
     public void sendMessage(Long chatId, String message) {
-        SendMessage request = new SendMessage(467414149, message);
+        SendMessage request = new SendMessage(chatId, message);
         bot.execute(request);
     }
 }

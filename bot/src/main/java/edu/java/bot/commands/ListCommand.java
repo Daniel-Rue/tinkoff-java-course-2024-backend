@@ -7,11 +7,14 @@ import edu.java.bot.user.UserService;
 import edu.java.bot.user.UserState;
 import edu.java.model.dto.response.ListLinksResponse;
 import java.util.StringJoiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListCommand.class);
     private final ScrapperClient scrapperClient;
 
     private static final String COMMAND = "/list";
@@ -51,6 +54,7 @@ public class ListCommand implements Command {
                 return new SendMessage(chatId.toString(), message.toString());
             }
         } catch (Exception e) {
+            LOGGER.error("Error fetching links for userId: {}", userId, e);
             return new SendMessage(chatId.toString(), ERROR_MESSAGE);
         }
     }
