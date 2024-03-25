@@ -1,8 +1,8 @@
 package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
-import edu.java.scrapper.domain.entity.TgChat;
-import edu.java.scrapper.domain.jbdc.JdbcTgChatRepository;
+import edu.java.scrapper.domain.entity.Chat;
+import edu.java.scrapper.domain.jbdc.JdbcChatRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,10 +16,10 @@ import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcTgChatRepositoryTest extends IntegrationEnvironment {
+public class JdbcChatRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
-    private JdbcTgChatRepository chatRepository;
+    private JdbcChatRepository chatRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -27,8 +27,8 @@ public class JdbcTgChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addTest() {
-        TgChat chat = new TgChat(null, OffsetDateTime.now());
-        TgChat savedChat = chatRepository.add(chat);
+        Chat chat = new Chat(null, OffsetDateTime.now());
+        Chat savedChat = chatRepository.add(chat);
 
         assertNotNull(savedChat.getId());
 
@@ -44,8 +44,8 @@ public class JdbcTgChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void removeTest() {
-        TgChat chat = new TgChat(null, OffsetDateTime.now());
-        TgChat savedChat = chatRepository.add(chat);
+        Chat chat = new Chat(null, OffsetDateTime.now());
+        Chat savedChat = chatRepository.add(chat);
 
         chatRepository.remove(savedChat);
 

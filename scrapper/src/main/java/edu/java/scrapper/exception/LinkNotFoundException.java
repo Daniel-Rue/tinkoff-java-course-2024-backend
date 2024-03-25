@@ -9,4 +9,8 @@ public class LinkNotFoundException extends ResponseStatusException {
     public LinkNotFoundException(URI url) {
         super(HttpStatus.NOT_FOUND, "Link not found: " + url);
     }
+
+    public LinkNotFoundException(Long linkId) {
+        super(HttpStatus.NOT_FOUND, "Link with ID " + linkId + " not found.");
+    }
 }

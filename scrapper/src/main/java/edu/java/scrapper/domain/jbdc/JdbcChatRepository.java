@@ -1,18 +1,15 @@
 package edu.java.scrapper.domain.jbdc;
 
-import edu.java.scrapper.domain.entity.TgChat;
-import java.sql.PreparedStatement;
+import edu.java.scrapper.domain.entity.Chat;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcTgChatRepository {
+public class JdbcChatRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,12 +19,12 @@ public class JdbcTgChatRepository {
     private static final String COUNT_CHAT_BY_ID = "SELECT COUNT(*) FROM chat WHERE id = ?";
     private static final String SELECT_CHAT_BY_ID = "SELECT * FROM chat WHERE id = ?";
 
-    public JdbcTgChatRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcChatRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Transactional
-    public TgChat add(TgChat chat) {
+    public Chat add(Chat chat) {
         jdbcTemplate.update(
             INSERT_CHAT,
             chat.getId(),
@@ -37,13 +34,13 @@ public class JdbcTgChatRepository {
     }
 
     @Transactional
-    public void remove(TgChat chat) {
+    public void remove(Chat chat) {
         jdbcTemplate.update(DELETE_CHAT, chat.getId());
     }
 
     @Transactional(readOnly = true)
-    public List<TgChat> findAll() {
-        return jdbcTemplate.query(SELECT_ALL_CHATS, new BeanPropertyRowMapper<>(TgChat.class));
+    public List<Chat> findAll() {
+        return jdbcTemplate.query(SELECT_ALL_CHATS, new BeanPropertyRowMapper<>(Chat.class));
     }
 
     public boolean existsById(Long chatId) {
@@ -51,9 +48,9 @@ public class JdbcTgChatRepository {
         return count != null && count > 0;
     }
 
-    public Optional<TgChat> findById(long tgChatId) {
-        List<TgChat> chatList =
-            jdbcTemplate.query(SELECT_CHAT_BY_ID, new BeanPropertyRowMapper<>(TgChat.class), tgChatId);
+    public Optional<Chat> findById(long tgChatId) {
+        List<Chat> chatList =
+            jdbcTemplate.query(SELECT_CHAT_BY_ID, new BeanPropertyRowMapper<>(Chat.class), tgChatId);
         if (chatList.isEmpty()) {
             return Optional.empty();
         }

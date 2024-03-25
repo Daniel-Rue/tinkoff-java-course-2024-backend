@@ -9,11 +9,11 @@ import java.util.Optional;
 import static edu.java.scrapper.domain.jooq.codegen.Tables.CHAT;
 
 @Repository
-public class JooqTgChatRepository {
+public class JooqChatRepository {
 
     private final DSLContext dsl;
 
-    public JooqTgChatRepository(DSLContext dsl) {
+    public JooqChatRepository(DSLContext dsl) {
         this.dsl = dsl;
     }
 

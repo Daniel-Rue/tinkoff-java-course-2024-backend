@@ -1,6 +1,6 @@
 package edu.java.scrapper.service.jooq;
 
-import edu.java.scrapper.domain.jooq.JooqTgChatRepository;
+import edu.java.scrapper.domain.jooq.JooqChatRepository;
 import edu.java.scrapper.exception.ChatNotFoundException;
 import edu.java.scrapper.exception.DuplicateRegistrationException;
 import edu.java.scrapper.service.TgChatService;
@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class JooqTgChatService implements TgChatService {
+public class JooqChatService implements TgChatService {
 
-    private final JooqTgChatRepository tgChatRepository;
+    private final JooqChatRepository tgChatRepository;
 
     @Override
     @Transactional
