@@ -30,6 +30,7 @@ class JpaLinkRepositoryTest extends IntegrationEnvironment {
 
     @Test
     @Transactional
+    @Rollback
     void whenFindByUrl_thenReturnsLink() {
         OffsetDateTime now = OffsetDateTime.now();
         TgChat chat = new TgChat(1L, now);
@@ -47,6 +48,7 @@ class JpaLinkRepositoryTest extends IntegrationEnvironment {
 
     @Test
     @Transactional
+    @Rollback
     void whenFindLinksToCheck_thenReturnsLinks() {
         OffsetDateTime now = OffsetDateTime.now();
         OffsetDateTime thresholdTime = now.minusDays(1);

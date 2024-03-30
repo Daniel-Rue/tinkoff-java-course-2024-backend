@@ -1,5 +1,6 @@
 package edu.java.scrapper.domain.jpa;
 
+import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.entity.TgChat;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-public class JpaTgChatRepositoryTest {
+public class JpaTgChatRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
     private JpaTgChatRepository tgChatRepository;
@@ -26,6 +27,7 @@ public class JpaTgChatRepositoryTest {
 
     @Test
     @Transactional
+    @Rollback
     public void whenSaveTgChat_thenFindById() {
         OffsetDateTime now = OffsetDateTime.now();
         TgChat chat = new TgChat(1L, now);
@@ -39,6 +41,7 @@ public class JpaTgChatRepositoryTest {
 
     @Test
     @Transactional
+    @Rollback
     public void whenDeleteTgChat_thenNotFound() {
         OffsetDateTime now = OffsetDateTime.now();
         TgChat chat = new TgChat(2L, now);

@@ -1,5 +1,6 @@
 package edu.java.scrapper.domain.jdbc;
 
+import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.entity.Link;
 import edu.java.scrapper.domain.jbdc.JdbcLinkRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcLinkRepositoryTest {
+public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
     private JdbcLinkRepository linkRepository;
@@ -52,6 +53,7 @@ public class JdbcLinkRepositoryTest {
 
     @Test
     @Transactional
+    @Rollback
     void addAndFindLink() {
         Long chatId = createChatAndReturnId();
         URI url = URI.create("https://example.com");
@@ -66,6 +68,7 @@ public class JdbcLinkRepositoryTest {
 
     @Test
     @Transactional
+    @Rollback
     void removeLink() {
         Long chatId = createChatAndReturnId();
         URI url = URI.create("https://example-to-remove.com");

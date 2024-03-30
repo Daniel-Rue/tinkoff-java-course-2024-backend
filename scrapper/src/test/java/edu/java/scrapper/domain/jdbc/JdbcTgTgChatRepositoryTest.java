@@ -32,6 +32,7 @@ public class JdbcTgTgChatRepositoryTest extends IntegrationEnvironment {
 
     @Test
     @Transactional
+    @Rollback
     public void addTest() {
         Long expectedId = 1L;
         TgChat tgChat = new TgChat(expectedId, OffsetDateTime.now());
@@ -50,6 +51,7 @@ public class JdbcTgTgChatRepositoryTest extends IntegrationEnvironment {
 
     @Test
     @Transactional
+    @Rollback
     public void removeTest() {
         long expectedId = 1;
         TgChat tgChat = new TgChat(expectedId, OffsetDateTime.now());
