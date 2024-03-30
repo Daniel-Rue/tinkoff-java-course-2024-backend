@@ -1,4 +1,4 @@
-package edu.java.scrapper.jdbc;
+package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.entity.Link;
@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -22,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcLinkTest extends IntegrationEnvironment {
+public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
     private JdbcLinkRepository linkRepository;

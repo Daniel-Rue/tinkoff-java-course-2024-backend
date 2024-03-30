@@ -6,13 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.test.StepVerifier;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 @SpringBootTest
 @WireMockTest(httpPort = 8089)
 public class StackOverflowClientTest {
@@ -24,36 +20,37 @@ public class StackOverflowClientTest {
         StackOverflowConfig stackOverflowConfig = Mockito.mock(StackOverflowConfig.class);
         Mockito.when(stackOverflowConfig.getBaseUrl()).thenReturn("http://localhost:8089");
         stackOverflowClient = new StackOverflowClient(stackOverflowConfig);
-
-        // Имитация успешного ответа от API
-        stubFor(get(urlPathEqualTo("/questions/123"))
-            .willReturn(aResponse()
-                .withHeader("Content-Type", "application/json")
-                .withStatus(200)
-                .withBody("{\"items\": [{\"last_edit_date\": 123123123, \"question_id\": 123}]}")));
-
-        // Имитация ответа с ошибкой
-        stubFor(get(urlPathEqualTo("/questions/404"))
-            .willReturn(aResponse()
-                .withStatus(404)
-                .withBody("{\"error_message\": \"Question not found.\"}")));
     }
 
     @Test
-    void fetchQuestionInfoShouldReturnQuestionDetailsOnSuccess() {
-        StepVerifier.create(stackOverflowClient.fetchQuestionInfo(123))
+    void fetchQuestionLastActivityShouldReturnDataOnSuccess() {
+        // Мокирование успешного ответа
+        stubFor(get(urlPathEqualTo("/questions/123456"))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "application/json")
+                .withStatus(200)
+                .withBody("{\"items\": [{\"question_id\": 123456, \"last_activity_date\": 1609459200}]}")));
+
+        StepVerifier.create(stackOverflowClient.fetchQuestionLastActivity(123456))
             .expectNextMatches(response ->
-                response.questions().stream().anyMatch(question ->
-                    question.id() == 123L &&
-                        question.updatedAt().equals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(123123123), ZoneOffset.UTC))))
+                response.questions().size() == 1 &&
+                response.questions().get(0).questionId() == 123456)
             .verifyComplete();
     }
 
     @Test
-    void fetchQuestionInfoShouldHandleError() {
-        StepVerifier.create(stackOverflowClient.fetchQuestionInfo(404))
-            .expectErrorMatches(throwable -> throwable instanceof WebClientResponseException &&
-                ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.NOT_FOUND)
-            .verify();
+    void fetchNewAnswersShouldReturnDataOnSuccess() {
+        stubFor(get(urlPathMatching("/questions/123456/answers"))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "application/json")
+                .withStatus(200)
+                .withBody("{\"items\": [{\"answer_id\": 654321, \"creation_date\": 1609459200}]}")));
+
+        StepVerifier.create(stackOverflowClient.fetchNewAnswers(123456))
+            .expectNextMatches(response ->
+                response.answers().size() == 1 &&
+                response.answers().get(0).answerId() == 654321)
+            .verifyComplete();
     }
+
 }

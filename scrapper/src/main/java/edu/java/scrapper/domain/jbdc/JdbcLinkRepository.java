@@ -155,7 +155,7 @@ public class JdbcLinkRepository {
         return count != null && count > 0;
     }
 
-    public Optional<Link> findByUrl(String url) {
+    private Optional<Link> findByUrl(String url) {
         List<Link> links = jdbcTemplate.query(
             FIND_BY_URL,
             new Object[] {url},

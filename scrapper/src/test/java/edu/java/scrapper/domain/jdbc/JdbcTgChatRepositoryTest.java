@@ -1,4 +1,4 @@
-package edu.java.scrapper.jdbc;
+package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.entity.TgChat;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @Testcontainers
-public class JdbcTgChatTest extends IntegrationEnvironment {
+public class JdbcTgChatRepositoryTest extends IntegrationEnvironment {
 
     @Autowired
     private JdbcTgChatRepository chatRepository;
