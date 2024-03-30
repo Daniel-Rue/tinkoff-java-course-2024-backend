@@ -26,7 +26,6 @@ public class JpaTgChatRepositoryTest {
 
     @Test
     @Transactional
-    @Rollback
     public void whenSaveTgChat_thenFindById() {
         OffsetDateTime now = OffsetDateTime.now();
         TgChat chat = new TgChat(1L, now);
@@ -40,7 +39,6 @@ public class JpaTgChatRepositoryTest {
 
     @Test
     @Transactional
-    @Rollback
     public void whenDeleteTgChat_thenNotFound() {
         OffsetDateTime now = OffsetDateTime.now();
         TgChat chat = new TgChat(2L, now);

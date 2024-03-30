@@ -52,7 +52,6 @@ public class JdbcLinkRepositoryTest {
 
     @Test
     @Transactional
-    @Rollback
     void addAndFindLink() {
         Long chatId = createChatAndReturnId();
         URI url = URI.create("https://example.com");
@@ -67,7 +66,6 @@ public class JdbcLinkRepositoryTest {
 
     @Test
     @Transactional
-    @Rollback
     void removeLink() {
         Long chatId = createChatAndReturnId();
         URI url = URI.create("https://example-to-remove.com");
