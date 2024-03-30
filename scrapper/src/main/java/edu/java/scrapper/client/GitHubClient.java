@@ -1,6 +1,6 @@
 package edu.java.scrapper.client;
 
-import edu.java.scrapper.configuration.GitHubConfig;
+import edu.java.scrapper.configuration.client.GitHubConfig;
 import edu.java.scrapper.dto.github.GitHubCommitResponse;
 import edu.java.scrapper.dto.github.GitHubLastUpdateResponse;
 import java.time.OffsetDateTime;

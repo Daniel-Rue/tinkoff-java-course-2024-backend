@@ -1,16 +1,22 @@
 app:
+  database-access-type: jpa
   scheduler:
     enable: true
     interval: 60000
     force-check-delay: 60000
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   application:
     name: scrapper
   datasource:
     url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: postgres
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 20
   liquibase:
     enabled: false
 

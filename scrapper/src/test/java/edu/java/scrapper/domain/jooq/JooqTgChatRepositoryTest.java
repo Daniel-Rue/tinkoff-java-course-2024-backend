@@ -2,56 +2,60 @@
 //
 //import edu.java.scrapper.IntegrationEnvironment;
 //import edu.java.scrapper.domain.jooq.codegen.tables.records.ChatRecord;
-//import org.jooq.DSLContext;
-//import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.test.annotation.Rollback;
-//import org.springframework.transaction.annotation.Transactional;
-//import org.testcontainers.junit.jupiter.Testcontainers;
 //import java.time.OffsetDateTime;
 //import java.util.Optional;
 //import static org.junit.jupiter.api.Assertions.*;
 //
 //@SpringBootTest
-//@Testcontainers
-//public class JooqTgChatRepositoryTest {
+//class JooqTgChatRepositoryTest extends IntegrationEnvironment {
 //
 //    @Autowired
-//    private DSLContext dsl;
+//    private JooqTgChatRepository repository;
 //
-//    private JooqTgChatRepository chatRepository;
+//    @Test
+//    void whenAddChat_thenChatIsAdded() {
+//        OffsetDateTime createdAt = OffsetDateTime.now();
+//        long tgChatId = 12345L;
 //
+//        ChatRecord added = repository.add(tgChatId, createdAt);
 //
-//
-//    @BeforeEach
-//    public void setUp() {
-//        chatRepository = new JooqTgChatRepository(dsl);
+//        assertNotNull(added);
+//        assertEquals(tgChatId, added.getId().longValue());
+//        assertEquals(createdAt, added.getCreatedAt());
 //    }
 //
 //    @Test
-//    @Transactional
-//    public void addAndFindByIdTest() {
+//    void whenRemoveChat_thenChatIsRemoved() {
+//        long tgChatId = 12345L;
 //        OffsetDateTime createdAt = OffsetDateTime.now();
+//        repository.add(tgChatId, createdAt);
 //
-//        ChatRecord addedChat = chatRepository.add(1, createdAt);
-//        assertNotNull(addedChat);
-//        assertNotNull(addedChat.getId());
+//        repository.remove(tgChatId);
 //
-//        Optional<ChatRecord> foundChat = chatRepository.findById(addedChat.getId());
-//        assertTrue(foundChat.isPresent());
-//        assertEquals(addedChat.getId(), foundChat.get().getId());
+//        assertFalse(repository.existsById(tgChatId));
 //    }
 //
 //    @Test
-//    @Transactional
-//    public void removeTest() {
+//    void whenChatExists_thenReturnTrue() {
+//        long tgChatId = 12345L;
 //        OffsetDateTime createdAt = OffsetDateTime.now();
+//        repository.add(tgChatId, createdAt);
 //
-//        ChatRecord addedChat = chatRepository.add(1, createdAt);
-//        long addedChatId = addedChat.getId();
-//        chatRepository.remove(addedChatId);
-//        assertFalse(chatRepository.existsById(addedChatId));
+//        assertTrue(repository.existsById(tgChatId));
+//    }
+//
+//    @Test
+//    void whenFindById_thenReturnChat() {
+//        long tgChatId = 12345L;
+//        OffsetDateTime createdAt = OffsetDateTime.now();
+//        repository.add(tgChatId, createdAt);
+//
+//        Optional<ChatRecord> found = repository.findById(tgChatId);
+//
+//        assertTrue(found.isPresent());
+//        assertEquals(tgChatId, found.get().getId().longValue());
 //    }
 //}

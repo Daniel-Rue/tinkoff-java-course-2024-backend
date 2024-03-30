@@ -3,12 +3,15 @@ package edu.java.scrapper.domain.jdbc;
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.entity.Link;
 import edu.java.scrapper.domain.jbdc.JdbcLinkRepository;
-import org.junit.jupiter.api.AfterEach;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -28,24 +31,31 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private Long chatId;
+    @DynamicPropertySource
+    public static void setJpaAccessType(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jdbc");
+    }
+
+    private static long nextChatId = 1;
+
+    private Long createChatAndReturnId() {
+        Long chatId = nextChatId++;
+        jdbcTemplate.update("INSERT INTO chat (id, created_at) VALUES (?, ?)", chatId, OffsetDateTime.now());
+        return chatId;
+    }
 
     @BeforeEach
     void setup() {
-        chatId = jdbcTemplate.queryForObject("INSERT INTO chat (created_at) VALUES (?) RETURNING id",
-            new Object[]{OffsetDateTime.now()},
-            Long.class);
-    }
-
-    @AfterEach
-    void cleanup() {
         jdbcTemplate.update("DELETE FROM chat_link");
         jdbcTemplate.update("DELETE FROM link");
         jdbcTemplate.update("DELETE FROM chat");
     }
 
     @Test
+    @Transactional
+    @Rollback
     void addAndFindLink() {
+        Long chatId = createChatAndReturnId();
         URI url = URI.create("https://example.com");
         Link newLink = new Link(null, url.toString(), OffsetDateTime.now(), OffsetDateTime.now(), "TestCreator");
         Link savedLink = linkRepository.add(newLink, chatId);
@@ -57,9 +67,12 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void removeLink() {
+        Long chatId = createChatAndReturnId();
         URI url = URI.create("https://example-to-remove.com");
-        Link newLink = new Link(null, url.toString(), OffsetDateTime.now(), OffsetDateTime.now(), "TestCreator");
+        Link newLink = new Link(null, url.toString(), OffsetDateTime.now(), OffsetDateTime.now(), "TestCreatorToRemove");
         Link savedLink = linkRepository.add(newLink, chatId);
 
         linkRepository.remove(savedLink.getId(), chatId);

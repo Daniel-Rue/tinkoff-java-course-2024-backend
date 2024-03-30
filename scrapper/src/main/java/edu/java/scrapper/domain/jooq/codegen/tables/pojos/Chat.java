@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 import javax.annotation.processing.Generated;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -41,7 +40,7 @@ public class Chat implements Serializable {
 
     @ConstructorProperties({ "id", "createdAt" })
     public Chat(
-        @Nullable Long id,
+        @NotNull Long id,
         @NotNull OffsetDateTime createdAt
     ) {
         this.id = id;
@@ -51,7 +50,8 @@ public class Chat implements Serializable {
     /**
      * Getter for <code>CHAT.ID</code>.
      */
-    @Nullable
+    @jakarta.validation.constraints.NotNull
+    @NotNull
     public Long getId() {
         return this.id;
     }
@@ -59,7 +59,7 @@ public class Chat implements Serializable {
     /**
      * Setter for <code>CHAT.ID</code>.
      */
-    public void setId(@Nullable Long id) {
+    public void setId(@NotNull Long id) {
         this.id = id;
     }
 

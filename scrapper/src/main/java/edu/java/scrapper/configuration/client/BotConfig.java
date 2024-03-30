@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration;
+package edu.java.scrapper.configuration.client;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "client.github")
-public class GitHubConfig {
-    private String baseUrl = "https://api.github.com";
+@ConfigurationProperties(prefix = "client.bot")
+public class BotConfig {
+    private String baseUrl;
 }
+

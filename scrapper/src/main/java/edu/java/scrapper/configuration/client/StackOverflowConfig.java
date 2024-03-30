@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration;
+package edu.java.scrapper.configuration.client;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "client.bot")
-public class BotConfig {
-    private String baseUrl;
+@ConfigurationProperties(prefix = "client.stackoverflow")
+public class StackOverflowConfig {
+    private String baseUrl = "https://api.stackexchange.com/2.2";
 }
-

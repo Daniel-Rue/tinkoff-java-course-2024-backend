@@ -7,12 +7,8 @@ import edu.java.scrapper.exception.DuplicateRegistrationException;
 import edu.java.scrapper.service.TgChatService;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Primary
-@Service
 @RequiredArgsConstructor
 public class JdbcTgChatService implements TgChatService {
 
@@ -25,16 +21,16 @@ public class JdbcTgChatService implements TgChatService {
             throw new DuplicateRegistrationException("Chat with ID " + tgChatId + " is already registered.");
         }
 
-        TgChat newChat = new TgChat(tgChatId, OffsetDateTime.now());
-        tgChatRepository.add(newChat);
+        TgChat newTgChat = new TgChat(tgChatId, OffsetDateTime.now());
+        tgChatRepository.add(newTgChat);
     }
 
     @Override
     @Transactional
     public void unregister(long tgChatId) {
-        TgChat chat = tgChatRepository.findById(tgChatId)
+        TgChat tgChat = tgChatRepository.findById(tgChatId)
             .orElseThrow(() -> new ChatNotFoundException(tgChatId));
 
-        tgChatRepository.remove(chat);
+        tgChatRepository.remove(tgChat);
     }
 }
