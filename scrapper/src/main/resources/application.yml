@@ -6,6 +6,8 @@ app:
     force-check-delay: 60000
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   application:
     name: scrapper
   datasource:
