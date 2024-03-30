@@ -27,14 +27,16 @@ public class JdbcTgTgChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addTest() {
-        TgChat tgChat = new TgChat(null, OffsetDateTime.now());
+        Long expectedId = 1L;
+        TgChat tgChat = new TgChat(expectedId, OffsetDateTime.now());
         TgChat savedTgChat = chatRepository.add(tgChat);
 
-        assertNotNull(savedTgChat.getId());
+        assertNotNull(savedTgChat);
+        assertEquals(expectedId, savedTgChat.getId());
 
         int count = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM chat WHERE id = ?",
-            new Object[] {savedTgChat.getId()},
+            new Object[] {expectedId},
             Integer.class
         );
         assertEquals(1, count);
@@ -44,14 +46,15 @@ public class JdbcTgTgChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void removeTest() {
-        TgChat tgChat = new TgChat(null, OffsetDateTime.now());
-        TgChat savedTgChat = chatRepository.add(tgChat);
+        long expectedId = 1;
+        TgChat tgChat = new TgChat(expectedId, OffsetDateTime.now());
+        chatRepository.add(tgChat);
 
-        chatRepository.remove(savedTgChat);
+        chatRepository.remove(tgChat);
 
         int count = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM chat WHERE id = ?",
-            new Object[] {savedTgChat.getId()},
+            new Object[] {expectedId},
             Integer.class
         );
         assertEquals(0, count);
