@@ -4,6 +4,20 @@ app:
     enable: true
     interval: 60000
     force-check-delay: 60000
+  retry:
+    type: CONSTANT
+    max-attempts: 3
+    delay-config:
+      constant:
+        back-off-period-millis: 1000
+      linear:
+        initial-interval-millis: 1000
+        max-interval-millis: 10000
+      exponential:
+        initial-interval-millis: 1000
+        multiplier: 2.0
+        max-interval-millis: 10000
+
 
 spring:
   jpa:
@@ -27,12 +41,35 @@ logging:
   config: classpath:log4j2-plain.xml
 
 client:
-  github:
-    base-url: "https://api.github.com"
-  stackoverflow:
-    base-url: "https://api.stackexchange.com/2.2"
   bot:
     base-url: "http://localhost:8090"
+    max-retry-attempts: 3
+    retry-delay: 1000
+    retry-status-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+
+  stackoverflow:
+    base-url: "https://api.stackexchange.com/2.2"
+    max-retry-attempts: 3
+    retry-delay: 1000
+    retry-status-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+  github:
+    base-url: "https://api.github.com"
+    max-retry-attempts: 3
+    retry-delay: 1000
+    retry-status-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+
 
 springdoc:
   swagger-ui:
