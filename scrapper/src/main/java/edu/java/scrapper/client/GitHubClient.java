@@ -8,10 +8,8 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -63,8 +61,8 @@ public class GitHubClient {
 
     private Retry retrySpec() {
         return Retry.fixedDelay(maxRetryAttempts, Duration.ofMillis(retryDelay))
-            .filter(throwable -> throwable instanceof WebClientResponseException &&
-                                 retryStatusCodes.contains(((WebClientResponseException) throwable).getStatusCode()
-                                     .value()));
+            .filter(throwable -> throwable instanceof WebClientResponseException
+                                 && retryStatusCodes.contains(((WebClientResponseException) throwable).getStatusCode()
+                .value()));
     }
 }

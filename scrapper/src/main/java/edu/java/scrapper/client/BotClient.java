@@ -4,13 +4,13 @@ import edu.java.model.dto.request.LinkUpdateRequest;
 import edu.java.model.dto.response.ApiErrorResponse;
 import edu.java.scrapper.configuration.client.BotConfig;
 import edu.java.scrapper.exception.ApiErrorResponseException;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
-import java.time.Duration;
 
 public class BotClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotClient.class);
@@ -43,7 +43,7 @@ public class BotClient {
 
     private Retry retrySpec() {
         return Retry.fixedDelay(maxRetryAttempts, Duration.ofMillis(retryDelay))
-            .filter(throwable -> throwable instanceof WebClientResponseException &&
-                                 ((WebClientResponseException) throwable).getStatusCode().is5xxServerError());
+            .filter(throwable -> throwable instanceof WebClientResponseException
+                                 && ((WebClientResponseException) throwable).getStatusCode().is5xxServerError());
     }
 }

@@ -3,13 +3,13 @@ package edu.java.scrapper.client;
 import edu.java.scrapper.configuration.client.StackOverflowConfig;
 import edu.java.scrapper.dto.stackoverflow.StackOverFlowAnswersResponse;
 import edu.java.scrapper.dto.stackoverflow.StackOverFlowQuestionLastActivityResponse;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
-import java.time.Duration;
 
 public class StackOverflowClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(StackOverflowClient.class);
@@ -46,7 +46,7 @@ public class StackOverflowClient {
 
     private Retry retrySpec() {
         return Retry.fixedDelay(maxRetryAttempts, Duration.ofMillis(retryDelay))
-            .filter(throwable -> throwable instanceof WebClientResponseException &&
-                                 ((WebClientResponseException) throwable).getStatusCode().is5xxServerError());
+            .filter(throwable -> throwable instanceof WebClientResponseException
+                                 && ((WebClientResponseException) throwable).getStatusCode().is5xxServerError());
     }
 }
