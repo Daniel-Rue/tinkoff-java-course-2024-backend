@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "client.bot")
+@ConfigurationProperties(prefix = "client.scrapper")
 public class ScrapperConfig {
     private String baseUrl = "http://localhost:8080";
     private int maxRetryAttempts;
