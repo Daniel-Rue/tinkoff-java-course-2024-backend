@@ -1,7 +1,7 @@
-package edu.java.scrapper.configuration.retry;
+package edu.java.bot.configuration.retry;
 
+import edu.java.bot.configuration.ApplicationConfig;
 import edu.java.model.dto.retry.LinearBackOffPolicy;
-import edu.java.scrapper.configuration.ApplicationConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;

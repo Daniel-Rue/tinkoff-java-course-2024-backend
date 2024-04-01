@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration.retry;
+package edu.java.model.dto.retry;
 
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.backoff.BackOffContext;

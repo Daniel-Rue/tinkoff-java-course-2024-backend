@@ -1,5 +1,23 @@
 app:
   telegram-token: ${TELEGRAM_API_TOKEN}
+  retry:
+    type: CONSTANT
+    max-attempts: 3
+    retry-status-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+    delay-config:
+      constant:
+        back-off-period-millis: 1000
+      linear:
+        initial-interval-millis: 1000
+        max-interval-millis: 10000
+      exponential:
+        initial-interval-millis: 1000
+        multiplier: 2.0
+        max-interval-millis: 10000
 
 spring:
   application:
