@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
-@Repository
 public interface JpaLinkRepository extends JpaRepository<Link, Long> {
 
     Optional<Link> findByUrl(String url);

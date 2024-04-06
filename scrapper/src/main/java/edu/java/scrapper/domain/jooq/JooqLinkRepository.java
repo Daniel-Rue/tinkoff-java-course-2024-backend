@@ -2,6 +2,7 @@ package edu.java.scrapper.domain.jooq;
 
 import edu.java.scrapper.domain.entity.Link;
 import edu.java.scrapper.domain.jooq.codegen.tables.records.LinkRecord;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.springframework.stereotype.Repository;
@@ -12,14 +13,10 @@ import java.util.Optional;
 import static edu.java.scrapper.domain.jooq.codegen.Tables.CHAT_LINK;
 import static edu.java.scrapper.domain.jooq.codegen.Tables.LINK;
 
-@Repository
+@RequiredArgsConstructor
 public class JooqLinkRepository {
 
     private final DSLContext dsl;
-
-    public JooqLinkRepository(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
     @Transactional
     public Link add(Link link, Long chatId) {
