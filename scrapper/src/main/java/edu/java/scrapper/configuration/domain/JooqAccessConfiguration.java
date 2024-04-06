@@ -1,7 +1,5 @@
 package edu.java.scrapper.configuration.domain;
 
-import edu.java.scrapper.domain.jbdc.JdbcLinkRepository;
-import edu.java.scrapper.domain.jbdc.JdbcTgChatRepository;
 import edu.java.scrapper.domain.jooq.JooqLinkRepository;
 import edu.java.scrapper.domain.jooq.JooqTgChatRepository;
 import edu.java.scrapper.service.LinkService;
