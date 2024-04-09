@@ -6,11 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.test.StepVerifier;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @SpringBootTest
 @WireMockTest(httpPort = 8089)
+@DirtiesContext
 public class StackOverflowClientTest {
 
     private StackOverflowClient stackOverflowClient;
