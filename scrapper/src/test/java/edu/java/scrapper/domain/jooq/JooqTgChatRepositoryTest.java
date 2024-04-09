@@ -5,11 +5,13 @@
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.test.annotation.DirtiesContext;
 //import java.time.OffsetDateTime;
 //import java.util.Optional;
 //import static org.junit.jupiter.api.Assertions.*;
 //
 //@SpringBootTest
+//@DirtiesContext
 //class JooqTgChatRepositoryTest extends IntegrationEnvironment {
 //
 //    @Autowired

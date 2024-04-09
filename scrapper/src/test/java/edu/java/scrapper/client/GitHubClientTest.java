@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.test.StepVerifier;
 import java.time.OffsetDateTime;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @SpringBootTest
 @WireMockTest(httpPort = 8089)
+@DirtiesContext
 public class GitHubClientTest {
 
     @Autowired
