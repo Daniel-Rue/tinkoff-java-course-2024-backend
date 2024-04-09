@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
 @RequiredArgsConstructor
-public class JdbcAccessConfiguration {
+public class JdbcAccessConfig {
 
     private final JdbcTemplate jdbcTemplate;
 
