@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
-public class JpaAccessConfiguration {
+public class JpaAccessConfig {
 
     private final JpaLinkRepository linkRepository;
 
     private final JpaTgChatRepository chatRepository;
 
-    public JpaAccessConfiguration(JpaLinkRepository linkRepository, JpaTgChatRepository chatRepository) {
+    public JpaAccessConfig(JpaLinkRepository linkRepository, JpaTgChatRepository chatRepository) {
         this.linkRepository = linkRepository;
         this.chatRepository = chatRepository;
     }
