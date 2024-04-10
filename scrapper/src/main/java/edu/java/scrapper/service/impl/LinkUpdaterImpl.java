@@ -1,7 +1,6 @@
 package edu.java.scrapper.service.impl;
 
 import edu.java.model.dto.request.LinkUpdateRequest;
-import edu.java.scrapper.client.BotClient;
 import edu.java.scrapper.client.GitHubClient;
 import edu.java.scrapper.client.StackOverflowClient;
 import edu.java.scrapper.domain.entity.Link;
@@ -11,6 +10,7 @@ import edu.java.scrapper.dto.stackoverflow.StackOverFlowAnswersResponse;
 import edu.java.scrapper.dto.stackoverflow.StackOverFlowQuestionLastActivityResponse;
 import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.LinkUpdater;
+import edu.java.scrapper.service.UpdateNotificationService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
     private final LinkService linkService;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final UpdateNotificationService updateNotificationService;
 
     @Override
     public int update(OffsetDateTime thresholdTime) {
@@ -110,7 +110,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
         StackOverFlowQuestionLastActivityResponse
             lastActivityResponse = stackOverflowClient.fetchQuestionLastActivity(questionId).block();
         if (lastActivityResponse != null && !lastActivityResponse.questions().isEmpty()) {
-            StackOverFlowQuestionLastActivityResponse.Question question = lastActivityResponse.questions().get(0);
+            StackOverFlowQuestionLastActivityResponse.Question question = lastActivityResponse.questions().getFirst();
             if (question.lastActivityDate().isAfter(link.getLastCheckTime())) {
                 LOGGER.info("New updates found for StackOverflow link: {}", link.getUrl());
                 fetchAndProcessNewStackOverflowAnswers(link, questionId);
@@ -148,7 +148,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
                 );
 
                 try {
-                    botClient.sendUpdate(updateRequest).block();
+                    updateNotificationService.sendUpdate(updateRequest);
                     LOGGER.info("Update notification sent for link: {} to chatId: {}", link.getUrl(), chatId);
                 } catch (Exception error) {
                     LOGGER.error(
