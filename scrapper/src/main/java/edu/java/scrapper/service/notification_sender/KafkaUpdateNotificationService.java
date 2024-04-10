@@ -9,7 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 @RequiredArgsConstructor
 public class KafkaUpdateNotificationService implements UpdateNotificationService {
 
-    private final KafkaTemplate<Long, LinkUpdateRequest>kafkaTemplate;
+    private final KafkaTemplate<Long, LinkUpdateRequest> kafkaTemplate;
     private final ApplicationConfig applicationConfig;
 
     @Override
