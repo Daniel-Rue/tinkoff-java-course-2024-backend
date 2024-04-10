@@ -12,6 +12,7 @@ public record ApplicationConfig(
     @NotNull Scheduler scheduler,
     Client client,
     @NotNull AccessType databaseAccessType,
+    Retry retry,
     @NotNull Boolean useQueue,
     KafkaConfig kafkaConfig
 
