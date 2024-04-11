@@ -13,6 +13,17 @@ app:
         initial-interval-millis: 1000
         multiplier: 2.0
         max-interval-millis: 10000
+  kafka-config:
+    bootstrap-servers: localhost:9091,localhost:9092,localhost:9093
+    updates-topic:
+      name: scrapper.updates
+      partitions: 3
+      replicas: 3
+    updates-topic-dlq:
+      name: scrapper.updates_dlq
+      partitions: 3
+      replicas: 3
+  use-queue: true
 
 bucket4j:
   enabled: true
