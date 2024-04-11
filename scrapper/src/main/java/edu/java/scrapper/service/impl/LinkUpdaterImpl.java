@@ -10,7 +10,7 @@ import edu.java.scrapper.dto.stackoverflow.StackOverFlowAnswersResponse;
 import edu.java.scrapper.dto.stackoverflow.StackOverFlowQuestionLastActivityResponse;
 import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.LinkUpdater;
-import edu.java.scrapper.service.UpdateNotificationService;
+import edu.java.scrapper.service.NotificationSenderService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
     private final LinkService linkService;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final UpdateNotificationService updateNotificationService;
+    private final NotificationSenderService notificationSenderService;
 
     @Override
     public int update(OffsetDateTime thresholdTime) {
@@ -148,7 +148,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
                 );
 
                 try {
-                    updateNotificationService.sendUpdate(updateRequest);
+                    notificationSenderService.sendUpdate(updateRequest);
                     LOGGER.info("Update notification sent for link: {} to chatId: {}", link.getUrl(), chatId);
                 } catch (Exception error) {
                     LOGGER.error(
