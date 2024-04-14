@@ -31,6 +31,10 @@
         <jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
         <java-telegram-bot-api.version>7.0.1</java-telegram-bot-api.version>
 
+        <!-- Metrics -->
+        <micrometer-prometheus.version>1.12.4</micrometer-prometheus.version>
+        <micrometer-tracing.version>1.2.4</micrometer-tracing.version>
+
         <!-- Tests -->
         <testcontainers.version>1.19.4</testcontainers.version>
         <wiremock.version>3.3.1</wiremock.version>
