@@ -116,24 +116,27 @@ services:
     image: prom/prometheus
     ports:
       - "9090:9090"
+    hostname: prometheus
     volumes:
       - ./prometheus.yml:/prometheus/prometheus.yml
       - prometheus_data:/prometheus
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    command:
+      - --config.file=/prometheus/prometheus.yml
+    restart: unless-stopped
     networks:
       - backend
 
   grafana:
     image: grafana/grafana-oss
+    depends_on:
+      - prometheus
     ports:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+    restart: unless-stopped
     networks:
       - backend
-    depends_on:
-      - prometheus
 
 volumes:
   postgresql: { }

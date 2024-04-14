@@ -112,11 +112,6 @@ management:
         prometheus: metrics
       exposure:
         include: health,info,prometheus
-    enabled-by-default: false
-  endpoint:
-    info:
-      enabled: true
-    health:
-      enabled: true
-    prometheus:
-      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
