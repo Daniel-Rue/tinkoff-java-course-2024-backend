@@ -68,6 +68,25 @@ client:
       - 503
       - 504
 
+management:
+  server:
+    port: 8091
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+      exposure:
+        include: health,info,prometheus
+    enabled-by-default: false
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
