@@ -3,7 +3,6 @@ package edu.java.bot.service;
 import edu.java.model.dto.request.LinkUpdateRequest;
 import io.micrometer.core.instrument.Counter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
