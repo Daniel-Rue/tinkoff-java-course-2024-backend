@@ -101,3 +101,17 @@ client:
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}

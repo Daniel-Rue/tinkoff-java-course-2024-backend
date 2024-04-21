@@ -13,7 +13,8 @@ public record ApplicationConfig(
     Client client,
     Retry retry,
     @NotNull Boolean useQueue,
-    KafkaConfig kafkaConfig
+    KafkaConfig kafkaConfig,
+    Micrometer micrometer
 ) {
     public record Client(String scrapper) {
     }
@@ -34,6 +35,16 @@ public record ApplicationConfig(
             String name,
             Integer partitions,
             Integer replicas
+        ) {
+        }
+    }
+
+    public record Micrometer(
+        ProcessedMessagesCounter processedMessagesCounter
+    ) {
+        public record ProcessedMessagesCounter(
+            String name,
+            String description
         ) {
         }
     }

@@ -24,6 +24,10 @@ app:
       partitions: 3
       replicas: 3
   use-queue: true
+  micrometer:
+    processed-messages-counter:
+      name: message.processed
+      description: Processed messages quantity from telegram API
 
 bucket4j:
   enabled: true
@@ -67,6 +71,20 @@ client:
       - 502
       - 503
       - 504
+
+management:
+  server:
+    port: 8091
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 springdoc:
   swagger-ui:
