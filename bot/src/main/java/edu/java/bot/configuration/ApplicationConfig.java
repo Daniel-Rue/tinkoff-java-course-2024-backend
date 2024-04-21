@@ -1,6 +1,7 @@
 package edu.java.bot.configuration;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -10,9 +11,31 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
     @NotEmpty String telegramToken,
     Client client,
-    Retry retry
+    Retry retry,
+    @NotNull Boolean useQueue,
+    KafkaConfig kafkaConfig
 ) {
     public record Client(String scrapper) {
+    }
+
+    public record KafkaConfig(
+        String bootstrapServers,
+        UpdatesTopic updatesTopic,
+        UpdatesTopic updatesTopicDlq
+    ) {
+        public record UpdatesTopic(
+            String name,
+            Integer partitions,
+            Integer replicas
+        ) {
+        }
+
+        public record UpdatesTopicDlq(
+            String name,
+            Integer partitions,
+            Integer replicas
+        ) {
+        }
     }
 
     public record Retry(

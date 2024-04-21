@@ -6,6 +6,8 @@ import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.TgChatService;
 import edu.java.scrapper.service.jooq.JooqLinkService;
 import edu.java.scrapper.service.jooq.JooqTgChatService;
+import lombok.RequiredArgsConstructor;
+import org.jooq.DSLContext;
 import org.jooq.conf.RenderQuotedNames;
 import org.jooq.impl.DefaultConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,29 +17,32 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jooq")
-public class JooqAccessConfiguration {
+@RequiredArgsConstructor
+public class JooqAccessConfig {
 
-    private final JooqLinkRepository linkRepository;
-
-    private final JooqTgChatRepository chatRepository;
-
-
-    public JooqAccessConfiguration(
+    @Bean
+    public LinkService linkService(
         JooqLinkRepository linkRepository,
         JooqTgChatRepository chatRepository
     ) {
-        this.linkRepository = linkRepository;
-        this.chatRepository = chatRepository;
-    }
-
-    @Bean
-    public LinkService linkService() {
         return new JooqLinkService(linkRepository, chatRepository);
     }
 
     @Bean
-    public TgChatService tgChatService() {
+    public TgChatService tgChatService(
+        JooqTgChatRepository chatRepository
+    ) {
         return new JooqTgChatService(chatRepository);
+    }
+
+    @Bean
+    public JooqLinkRepository linkRepository(DSLContext dslContext) {
+        return new JooqLinkRepository(dslContext);
+    }
+
+    @Bean
+    public JooqTgChatRepository tgChatRepository(DSLContext dslContext) {
+        return new JooqTgChatRepository(dslContext);
     }
 
     @Bean

@@ -1,6 +1,7 @@
 package edu.java.scrapper.domain.jooq;
 
 import edu.java.scrapper.domain.jooq.codegen.tables.records.ChatRecord;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,14 +9,10 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import static edu.java.scrapper.domain.jooq.codegen.Tables.CHAT;
 
-@Repository
+@RequiredArgsConstructor
 public class JooqTgChatRepository {
 
     private final DSLContext dsl;
-
-    public JooqTgChatRepository(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
     @Transactional
     public ChatRecord add(long tgChatId, OffsetDateTime createdAt) {

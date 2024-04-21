@@ -14,7 +14,6 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 
-
 public class JpaLinkService implements LinkService {
 
     private final JpaLinkRepository linkRepository;
